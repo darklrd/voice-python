@@ -26,6 +26,7 @@ class SynthesizerType(str, Enum):
     COQUI = "synthesizer_coqui"
     BARK = "synthesizer_bark"
     POLLY = "synthesizer_polly"
+    BHASHINI = "synthesizer_bhashini"
 
 
 class SentimentConfig(BaseModel):

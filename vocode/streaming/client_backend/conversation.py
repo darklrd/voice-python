@@ -31,6 +31,11 @@ from vocode.streaming.models.events import Event, EventType
 from vocode.streaming.models.transcript import TranscriptEvent
 from vocode.streaming.utils import events_manager
 
+import sys
+sys.path.append('../../../ai-call-center/utils')
+from utils.dynamodb_helper import DynamoDBHelper
+from utils.conversation_utils import create_synthesizer, create_deepgram_transcriber
+
 BASE_CONVERSATION_ENDPOINT = "/conversation"
 
 
@@ -121,11 +126,15 @@ class TranscriptEventManager(events_manager.EventsManager):
         super().__init__(subscriptions=[EventType.TRANSCRIPT])
         self.output_device = output_device
         self.logger = logger or logging.getLogger(__name__)
+        self.db_helper = DynamoDBHelper()
+
 
     async def handle_event(self, event: Event):
+        self.db_helper.log_event(event)
         if event.type == EventType.TRANSCRIPT:
             transcript_event = typing.cast(TranscriptEvent, event)
             self.output_device.consume_transcript(transcript_event)
+            self.db_helper.log_transcript(transcript_event)
             # self.logger.debug(event.dict())
 
     def restart(self, output_device: WebsocketOutputDevice):
