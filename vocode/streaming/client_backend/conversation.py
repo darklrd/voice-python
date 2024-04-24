@@ -32,7 +32,7 @@ from vocode.streaming.models.transcript import TranscriptEvent
 from vocode.streaming.utils import events_manager
 
 import sys
-sys.path.append('../../../ai-call-center/utils')
+sys.path.append('../../../ai-call-center')
 from utils.dynamodb_helper import DynamoDBHelper
 from utils.conversation_utils import create_synthesizer, create_deepgram_transcriber
 
