@@ -34,7 +34,7 @@ from vocode.streaming.utils import events_manager
 import sys
 sys.path.append('../../../ai-call-center')
 from utils.dynamodb_helper import DynamoDBHelper
-from utils.conversation_utils import create_synthesizer, create_deepgram_transcriber
+from utils.conversation_utils import create_synthesizer, create_transcriber
 
 BASE_CONVERSATION_ENDPOINT = "/conversation"
 
@@ -62,9 +62,9 @@ class ConversationRouter(BaseRouter):
         conversation_endpoint: str = BASE_CONVERSATION_ENDPOINT,
     ):
         super().__init__()
-        self.transcriber_thunk = transcriber_thunk
+        self.transcriber_thunk = create_transcriber
         self.agent_thunk = agent_thunk
-        self.synthesizer_thunk = synthesizer_thunk
+        self.synthesizer_thunk = create_synthesizer
         self.logger = logger or logging.getLogger(__name__)
         self.router = APIRouter()
         self.router.websocket(conversation_endpoint)(self.conversation)
